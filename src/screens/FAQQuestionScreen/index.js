@@ -13,7 +13,7 @@ export async function getStaticPaths() {
   };
 }
 
-export async function getStaticProps({ params }) {
+export async function getStaticProps({ params, preview }) {
   const { id } = params;
 
   const query = `
@@ -29,9 +29,8 @@ export async function getStaticProps({ params }) {
 
   const { data } = await cmsService({
     query,
+    preview,
   });
-
-  console.log(JSON.stringify(data));
 
   return {
     props: {
@@ -91,7 +90,7 @@ export default function FAQQuestionScreen({ cmsContent }) {
           />
         </Box>
       </Box>
-      
+
       <Footer description={cmsContent.globalContent.globalFooter.description} />
     </>
   );

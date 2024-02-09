@@ -1,4 +1,6 @@
 const TOKEN = process.env.DATO_TOKEN;
+const BASE_URL = "https://graphql.datocms.com/";
+const PREVIEW_URL = "https://graphql.datocms.com/preview/";
 
 const globalQuery = `
   query {
@@ -8,9 +10,9 @@ const globalQuery = `
   }
 `;
 
-export async function cmsService({ query }) {
+export async function cmsService({ query, preview = false }) {
   try {
-    const url = "https://graphql.datocms.com/";
+    const url = !preview ? BASE_URL : PREVIEW_URL;
 
     const pageContentResponse = await fetch(url, {
       method: "POST",
