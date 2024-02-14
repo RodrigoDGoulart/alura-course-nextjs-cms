@@ -10,7 +10,7 @@ const globalQuery = `
   }
 `;
 
-export async function cmsService({ query, preview = false }) {
+export async function cmsService({ query, variables, preview = false }) {
   try {
     const url = !preview ? BASE_URL : PREVIEW_URL;
 
@@ -22,6 +22,7 @@ export async function cmsService({ query, preview = false }) {
       },
       body: JSON.stringify({
         query,
+        variables,
       }),
     }).then(async (res) => {
       const body = await res.json();

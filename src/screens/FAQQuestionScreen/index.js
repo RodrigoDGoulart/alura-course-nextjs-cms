@@ -8,8 +8,25 @@ import { isHeading } from "datocms-structured-text-utils";
 import { PageHOC } from "../../components/wrappers/pageHOC";
 
 export async function getStaticPaths() {
+  const query = `
+    query {
+      allContentFaqQuestions {
+        id
+        title
+      }
+    }
+  `;
+
+  const { data } = await cmsService({
+    query,
+  });
+
+  const paths = data.allContentFaqQuestions.map(({ id }) => ({
+    params: { id },
+  }));
+
   return {
-    paths: [{ params: { id: "f138c88d" } }, { params: { id: "h138c88d" } }],
+    paths,
     fallback: false,
   };
 }
@@ -18,8 +35,11 @@ export async function getStaticProps({ params, preview }) {
   const { id } = params;
 
   const query = `
-    query {
-      contentFaqQuestion {
+    query($id: ItemId) {
+      allContentFaqQuestions (filter:{
+        id: {eq: $id}
+      }) {
+        id
         title
         content {
           value
@@ -28,8 +48,11 @@ export async function getStaticProps({ params, preview }) {
     }
   `;
 
+  const variables = { id };
+
   const { data } = await cmsService({
     query,
+    variables,
     preview,
   });
 
@@ -69,13 +92,13 @@ function FAQQuestionScreen({ cmsContent }) {
           }}
         >
           <Text tag="h1" variant="heading1">
-            {cmsContent.contentFaqQuestion.title}
+            {cmsContent.allContentFaqQuestions[0].title}
           </Text>
 
           {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
           {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
           <StructuredText
-            data={cmsContent.contentFaqQuestion.content}
+            data={cmsContent.allContentFaqQuestions[0].content}
             customNodeRules={[
               renderNodeRule(isHeading, ({ node, children, key }) => {
                 const tag = `h${node.level}`;
