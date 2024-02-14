@@ -94,9 +94,7 @@ function FAQQuestionScreen({ cmsContent }) {
           <Text tag="h1" variant="heading1">
             {cmsContent.allContentFaqQuestions[0].title}
           </Text>
-
-          {/* <Box dangerouslySetInnerHTML={{ __html: content }} /> */}
-          {/* <pre>{JSON.stringify(content, null, 2)}</pre> */}
+          
           <StructuredText
             data={cmsContent.allContentFaqQuestions[0].content}
             customNodeRules={[
